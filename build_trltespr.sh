@@ -27,7 +27,12 @@ sudo apt-get -y dist-upgrade
 
 # install build packages
 console_log "Installing build packages..."
-sudo apt-get -y install bc bison build-essential ccache curl flex gcc-multilib git-core gnupg gperf g++-multilib libc6-dev-i386 libesd0-dev libgl1-mesa-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk2.8-dev libxml2 libxml2-utils libx11-dev lib32z-dev lib32ncurses5-dev lzop maven openjdk-7-jdk openjdk-7-jre pngcrush schedtool squashfs-tools unzip xsltproc x11proto-core-dev zip zlib1g-dev
+sudo apt-get -y sudo apt-get install bison build-essential curl flex \
+git gnupg gperf libesd0-dev liblz4-tool \
+libncurses5-dev libsdl1.2-dev libwxgtk3.0-dev libxml2 libxml2-utils \
+lzop maven openjdk-8-jdk pngcrush schedtool \
+squashfs-tools xsltproc zip zlib1g-dev g++-multilib gcc-multilib \
+lib32ncurses5-dev lib32readline-gplv2-dev lib32z1-dev
 
 # create build directories
 console_log "Creating build directories..."
@@ -105,7 +110,7 @@ git config --global user.email "$GIT_USER_EMAIL"
 # init repo
 console_log "Initializing repo..."
 cd ~/android/system
-cat <<EOF | repo init -u https://github.com/CyanogenMod/android.git -b cm-13.0
+cat <<EOF | repo init -u https://github.com/CyanogenMod/android.git -b cm-14.1
 N
 EOF
 
@@ -115,10 +120,24 @@ mkdir -p ~/android/system/.repo/local_manifests
 cat <<EOF > ~/android/system/.repo/local_manifests/roomservice.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <project name="CyanogenMod/android_device_lge_hammerheadcaf" path="device/lge/hammerheadcaf" remote="github" />
-  <project name="myfluxi/android_kernel_lge_hammerhead" path="kernel/lge/hammerhead" remote="github" revision="cm-13.0-caf-160310" />
-  <project name="CyanogenMod/android_device_qcom_common" path="device/qcom/common" remote="github" />
-  <project name="myfluxi/proprietary_vendor_lge" path="vendor/lge" remote="github" revision="cm-13.0" />
+  <remote fetch="git://github.com" name="github" />
+  <remote fetch="https://github.com/" name="emotion" revision="refs/heads/nougat" />
+  <remote fetch="https://github.com/" name="lilferraro" />
+  <project name="EmotionOS/android_hardware_qcom_keymaster" path="hardware/qcom/keymaster" remote="emotion" revision="nougat" />
+  <project name="EmotionOS/android_device_samsung_trltespr" path="device/samsung/trltespr" remote="emotion" revision="nougat" />
+  <project branch="nougat" name="EmotionOS/proprietary_vendor_samsung" path="vendor/samsung" remote="emotion" />
+  <project branch="cm-14.1" name="LineageOS/android_hardware_samsung" path="hardware/samsung" remote="cm" />
+  <project branch="cm-14.1" name="LineageOS/android_device_samsung_qcom-common" path="device/samsung/qcom-common" remote="cm" />
+  <project branch="cm-14.1" name="LineageOS/android_external_stlport" path="external/stlport" remote="cm" />
+  <project name="LineageOS/android_vendor_nxp-nfc_opensource_frameworks" path="vendor/nxp-nfc/opensource/frameworks" remote="cm" revision="cm-14.1" />
+  <project name="LineageOS/android_vendor_nxp-nfc_opensource_libnfc-nci" path="vendor/nxp-nfc/opensource/libnfc-nci" remote="cm" revision="cm-14.1" />
+  <project name="LineageOS/android_vendor_nxp-nfc_opensource_Nfc" path="vendor/nxp-nfc/opensource/Nfc" remote="cm" revision="cm-14.1" />
+  <project name="EmotionOS/proprietary_vendor_qcom_binaries" path="vendor/qcom/binaries" remote="emotion" revision="nougat" />
+  <project name="EmotionOS/android_device_qcom_common" path="device/qcom/common" remote="emotion" revision="nougat" />
+  <project name="EmotionOS/android_device_samsung_trlte-common" path="device/samsung/trlte-common" remote="emotion" revision="nougat" />
+  <project name="lilferraro/android_kernel_samsung_trlte-1" path="kernel/samsung/trlte" remote="lilferraro" revision="cm-14.1" />
+  <project name="CyanogenMod/android_packages_resources_devicesettings" path="packages/resources/devicesettings" remote="github" />
+  <project name="CyanogenMod/android_packages_apps_FlipFlap" path="packages/apps/FlipFlap" remote="github" />
 </manifest>
 EOF
 
@@ -135,5 +154,5 @@ console_log "Preparing build environment..."
 source build/envsetup.sh
 
 # build the ROM!
-console_log "Building CM 13.0 for hammerheadcaf..."
-brunch hammerheadcaf
+console_log "Building CM 14.1 for trltespr..."
+brunch trltespr
