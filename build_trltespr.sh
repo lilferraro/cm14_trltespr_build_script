@@ -136,8 +136,6 @@ cat <<EOF > ~/android/system/.repo/local_manifests/roomservice.xml
   <project name="EmotionOS/android_device_qcom_common" path="device/qcom/common" remote="emotion" revision="nougat" />
   <project name="EmotionOS/android_device_samsung_trlte-common" path="device/samsung/trlte-common" remote="emotion" revision="nougat" />
   <project name="lilferraro/android_kernel_samsung_trlte-1" path="kernel/samsung/trlte" remote="lilferraro" revision="cm-14.1" />
-  <project name="CyanogenMod/android_packages_resources_devicesettings" path="packages/resources/devicesettings" remote="github" />
-  <project name="CyanogenMod/android_packages_apps_FlipFlap" path="packages/apps/FlipFlap" remote="github" />
 </manifest>
 EOF
 
