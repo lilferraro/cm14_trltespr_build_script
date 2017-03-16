@@ -27,12 +27,13 @@ sudo apt-get -y dist-upgrade
 
 # install build packages
 console_log "Installing build packages..."
-sudo apt-get -y sudo apt-get install bison build-essential curl flex \
-git gnupg gperf libesd0-dev liblz4-tool \
+sudo apt-get -y sudo apt-get install git-core bison build-essential curl flex \
+git gnupg gperf libesd0-dev libgl1-mesa-dev libxml2-utils ccache libc6-dev-i386 liblz4-tool \
 libncurses5-dev libsdl1.2-dev libwxgtk3.0-dev libxml2 libxml2-utils \
-lzop maven openjdk-8-jdk pngcrush schedtool \
+lzop maven openjdk-8-jdk libx11-dev x11proto-core-dev pngcrush schedtool \
 squashfs-tools xsltproc zip zlib1g-dev g++-multilib gcc-multilib \
-lib32ncurses5-dev lib32readline-gplv2-dev lib32z1-dev
+lib32ncurses5-dev lib32readline-gplv2-dev unzip lib32z-dev lib32z1-dev \
+
 
 # create build directories
 console_log "Creating build directories..."
@@ -102,7 +103,7 @@ EOF
 # apply changes
 source ~/.profile
 
-# set git identity
+# set git identity 
 console_log "Setting user identity for Git..."
 git config --global user.name "$GIT_USER_NAME"
 git config --global user.email "$GIT_USER_EMAIL"
@@ -110,22 +111,30 @@ git config --global user.email "$GIT_USER_EMAIL"
 # init repo
 console_log "Initializing repo..."
 cd ~/android/system
-cat <<EOF | repo init -u https://github.com/CyanogenMod/android.git -b cm-14.1
+cat <<EOF | repo init -u git://github.com/LineageOS/android.git -b cm-14.1
 N
 EOF
 
 # create local manifest
-console_log "Creating local manifest for hammerheadcaf..."
+console_log "Creating local manifest for trltespr..."
 mkdir -p ~/android/system/.repo/local_manifests
 cat <<EOF > ~/android/system/.repo/local_manifests/roomservice.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remote fetch="git://github.com" name="github" />
+
   <remote fetch="https://github.com/" name="emotion" revision="refs/heads/nougat" />
-  <remote fetch="https://github.com/" name="lilferraro" />
-  <project name="EmotionOS/android_hardware_qcom_keymaster" path="hardware/qcom/keymaster" remote="emotion" revision="nougat" />
-  <project name="EmotionOS/android_device_samsung_trltespr" path="device/samsung/trltespr" remote="emotion" revision="nougat" />
+  <remote fetch="https://github.com" name="cm" />
+  <remote fetch="https://github.com" name="lilferraro" />
+
+
+
+
+  <project name="lilferraro/android_device_samsung_trltespr" path="device/samsung/trltespr" remote="lilferraro" revision="cm-14.1" />
+  <project name="lilferraro/android_device_samsung_trlte-common" path="device/samsung/trlte-common" remote="lilferraro" revision="cm-14.1" />
+  <project name="EmotionOS/android_kernel_samsung_trlte" path="kernel/samsung/trlte" remote="emotion" revision="nougat" />
   <project branch="nougat" name="EmotionOS/proprietary_vendor_samsung" path="vendor/samsung" remote="emotion" />
+  <remove-project name="LineageOS/android_external_connectivity" />
+  <project name="LineageOS/android_external_connectivity" path="external/connectivity" remote="cm" revision="cm-14.1" />
   <project branch="cm-14.1" name="LineageOS/android_hardware_samsung" path="hardware/samsung" remote="cm" />
   <project branch="cm-14.1" name="LineageOS/android_device_samsung_qcom-common" path="device/samsung/qcom-common" remote="cm" />
   <project branch="cm-14.1" name="LineageOS/android_external_stlport" path="external/stlport" remote="cm" />
@@ -134,8 +143,9 @@ cat <<EOF > ~/android/system/.repo/local_manifests/roomservice.xml
   <project name="LineageOS/android_vendor_nxp-nfc_opensource_Nfc" path="vendor/nxp-nfc/opensource/Nfc" remote="cm" revision="cm-14.1" />
   <project name="EmotionOS/proprietary_vendor_qcom_binaries" path="vendor/qcom/binaries" remote="emotion" revision="nougat" />
   <project name="EmotionOS/android_device_qcom_common" path="device/qcom/common" remote="emotion" revision="nougat" />
-  <project name="EmotionOS/android_device_samsung_trlte-common" path="device/samsung/trlte-common" remote="emotion" revision="nougat" />
-  <project name="lilferraro/android_kernel_samsung_trlte-1" path="kernel/samsung/trlte" remote="lilferraro" revision="cm-14.1" />
+  <project name="LineageOS/android_packages_resources_devicesettings" path="packages/resources/devicesettings" remote="github" />
+  <project name="LineageOS/android_packages_apps_FlipFlap" path="packages/apps/FlipFlap" remote="github" />
+  <project name="LineageOS/android_hardware_sony_timekeep" path="hardware/sony/timekeep" remote="github" />
 </manifest>
 EOF
 
@@ -153,4 +163,4 @@ source build/envsetup.sh
 
 # build the ROM!
 console_log "Building CM 14.1 for trltespr..."
-brunch trltespr
+brunch lineage_trltespr_userdebug
